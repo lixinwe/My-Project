@@ -1,0 +1,10 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /sys
+
+spring:
+  application:
+    name: core-server
+  profiles:
+    active: @package.environment@

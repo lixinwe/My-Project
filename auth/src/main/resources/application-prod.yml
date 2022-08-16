@@ -1,0 +1,64 @@
+spring:
+  messages:
+    encoding: UTF-8
+    basename: i18n/messages_common, i18n.authErr
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  redis:
+    database: 0
+    host: localhost
+    jedis:
+      pool:
+        max-active: 20
+        max-idle: 8
+        max-wait: -1
+        min-idle: 1
+    port: 6379
+    password: ''
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    metadata-map:
+      management:
+        context-path: ${server.servlet.context-path}/actuator
+    health-check-url-path: ${server.servlet.context-path}/actuator/health
+    status-page-url-path: ${server.servlet.context-path}/actuator/info
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 600000 #缺省为1000
+
+ribbon:
+  ReadTimeout: 300000
+  ConnectTimeout: 300000
+
+jwt:
+  #秘钥
+  secret: f4e2e52034348f86b67cde5
+  #token有效时长，默认7天，单位秒
+  expire: 604800
+
