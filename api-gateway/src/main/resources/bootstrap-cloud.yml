@@ -1,0 +1,58 @@
+spring:
+  cloud:
+    gateway:
+      locator:
+        enabled: true
+      routes:
+        # Certification services
+        - id: auth-server
+          uri: lb://auth-server
+          order: 1
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=0
+        # core base services
+        - id: core-server
+          uri: lb://core-server
+          order: 2
+          predicates:
+            - Path=/sys/**
+          filters:
+            - StripPrefix=0
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka_url}
+
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: 200
+      maxQueueSize: 1000
+      queueSizeRejectionThreshold: 800
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1500000 #缺省为1000
+
+ribbon:
+  ReadTimeout: 1500000
+  ConnectTimeout: 1500000
+
+management:
+  endpoint:
+    gateway:
+      enabled: false
