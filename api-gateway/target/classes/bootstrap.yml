@@ -1,9 +1,0 @@
-server:
-  port: 8080
-
-spring:
-  application:
-    name: gateway-server
-  # Environment dev|test/uat|prod/cloud
-  profiles:
-    active: dev
